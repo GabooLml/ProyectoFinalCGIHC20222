@@ -1,6 +1,6 @@
 ## Credits
 | Name |
 | :--- |
-| [Max](https://github.com/ktroz)|
+| [Maax](https://github.com/ktroz)|
 | [Gabriel](https://github.com/GabooLml) |
 | Fer |
