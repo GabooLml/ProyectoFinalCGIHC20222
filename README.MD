@@ -1,4 +1,4 @@
-##Proyecto final de Computación Gráfica E Interacción Humano Computadoora
+#Proyecto final de Computación Gráfica E Interacción Humano Computadoora
 ## Credits
 | Name |
 | :--- |
