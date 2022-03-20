@@ -1,6 +1,7 @@
+# Proyecto final de Computación Gráfica E Interacción Humano Computadoora
 ## Credits
 | Name |
 | :--- |
-| [Maax](https://github.com/ktroz)|
+| [Max](https://github.com/ktroz)|
 | [Gabriel](https://github.com/GabooLml) |
-| Fer |
+| [Fer](https://github.com/fer-jim19) |
