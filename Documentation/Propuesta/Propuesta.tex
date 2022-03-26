@@ -7,7 +7,11 @@
 \usepackage{indentfirst}%para el identado de párrafos
 \usepackage{array}%Tamaño de celdas
 \usepackage{blindtext}%Enumeraciones
+\usepackage{xcolor}
+\usepackage{hyperref} %enlaces
+\usepackage{colortbl} %Color de las tablas
 
+\graphicspath{ {images/} } %Para las imagenes del fancyhead
 \renewcommand{\headrulewidth}{0pt}
 \pagestyle{empty}
 
@@ -94,14 +98,19 @@
 	\begin{center}
 		\begin{tabular}{ | m{19em} | m{19em} | }
 			\hline
-			Nombre & Animación  \\ 
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			\textbf{Nombre} & \textbf{Animación}  \\ 
 			\hline
+			\hline
+			\rowcolor[rgb]{0.4,0.6,1.0}
 		 	Tiranosaurio rex &
 		 	\includegraphics[scale=0.5]{images/Tiranosaurio.JPG} \\  
 		 	\hline
+		 	\rowcolor[rgb]{0.6,0.8,1.0}
 		 	Cuello largo (Diplodocus) &
 		 	\includegraphics[scale=0.5]{images/Diplodocus.JPG} \\
 		 	\hline
+		 	\rowcolor[rgb]{0.4,0.6,1.0}
 		 	Estegosaurio &
 		 	\includegraphics[scale=0.5]{images/Estegosaurio.JPG} \\  
 			\hline
@@ -110,14 +119,19 @@
 	\begin{center}
 		\begin{tabular}{ | m{19em} | m{19em} | }
 			\hline
-			Nombre & Animación  \\ 
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			\textbf{Nombre} & \textbf{Animación}  \\  
 		 	\hline
+		 	\hline
+		 	\rowcolor[rgb]{0.4,0.6,1.0}
 		 	Velociraptor &
 		 	\includegraphics[scale=0.5]{images/Velociraptor.JPG} \\  
 		 	\hline
+		 	\rowcolor[rgb]{0.6,0.8,1.0}
 		 	Helicóptero &
 		 	\includegraphics[scale=0.5]{images/Helicoptero.JPG} \\  
 			\hline
+			\rowcolor[rgb]{0.4,0.6,1.0}
 		 	Avatar &
 		 	\includegraphics[scale=0.5]{images/Avatar.JPG} \\  
 			\hline
@@ -138,15 +152,15 @@
 	\section{Elementos diferentes}
 	
 	\begin{itemize}
-		\item[*] Dinosaurios (4)
-		\item[*] Árboles (2)
-		\item[*] Arbustos (2)
-		\item[*] Pasto (1)
-		\item[*] Agua (1)
-		\item[*] Concreto (1)
-		\item[*] Helicóptero (1)
-		\item[*] Lámparas (1)
-		\item[*] Spotlight (1)
+		\item[\textbullet] Dinosaurios (4)
+		\item[\textbullet] Árboles (2)
+		\item[\textbullet] Arbustos (2)
+		\item[\textbullet] Pasto (1)
+		\item[\textbullet] Agua (1)
+		\item[\textbullet] Concreto (1)
+		\item[\textbullet] Helicóptero (1)
+		\item[\textbullet] Lámparas (1)
+		\item[\textbullet] Spotlight (1)
  	\end{itemize}
  	
  	Éstos elementos serán únicos pero podrán repetirse a lo largo del escenario.
@@ -154,31 +168,130 @@
  	\section{Animaciones tentativas}
 	
 	\begin{itemize}
-		\item[*] \emph{Velociraptor:} Correr.
-		\item[*] \emph{Diplodocus:} Ver a su alrededor, asegurándose que no haya presas y después bajarse a comer pasto, 
+		\item[\textbullet] \emph{Velociraptor:} Correr.
+		\item[\textbullet] \emph{Diplodocus:} Ver a su alrededor, asegurándose que no haya presas y después bajarse a comer pasto, 
 					o bien comer de un árbol.
-		\item[*] \emph{Tiranosaurio:} Grito.
-		\item[*] \emph{Estegosaurio:} Caminata.
-		\item[*] \emph{Helicóptero:} Aceleración gradual de hélices y elevación. 
+		\item[\textbullet] \emph{Tiranosaurio:} Grito.
+		\item[\textbullet] \emph{Estegosaurio:} Caminata.
+		\item[\textbullet] \emph{Helicóptero:} Aceleración gradual de hélices y elevación. 
 				Inclinaciones (izquerda, derecha, adelante, atrás) y giro (izquierda, derecha).
-		\item[*] \emph{Avatar:} Caminata tipo Roblox.
+		\item[\textbullet] \emph{Avatar:} Caminata tipo Roblox.
  	\end{itemize}
  	
  	\section{Cronograma de actividades}
  	
  	\begin{center}
-		\begin{tabular}{ | m{5.5em} | m{5.5em} | m{5.5em} | m{5.5em} | m{5.5em} | m{5.5em} |}
+ 		\def\arraystretch{1.5} %permite el espaciado dentro de las celdas
+		\begin{tabular}{ | m{1.5em} | m{12em} | m{5.5em} | m{5.5em} | m{3em} | m{5.5em} |}
 			\hline
-			\# & Actividad & Fecha & Horario & Numero de Horas & Costo \\ 
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			\textbf{\#} & \textbf{Actividad} & \textbf{Fech}& \textbf{Horario} & \textbf{Horas} & \textbf{Costo} \\ 
 			\hline
-			1 &  &  &  &  & asdf \\ 
 			\hline
-			
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			1 & Planeación de la distribución y diseño del espacio virtual, selección de modelo a emplear & 21/03/2022 & 18:00-20:00 & 2 & 364.4 \\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			2 & Diseño base del ambiente virtual & 23/03/2022 & 18:00-20:00 & 2 & 232.88 \\ 
+			\hline
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			3 & Modelado del ambiente virtual & 23/03/2022 & 18:00-20:00 & 2 & 364.4 \\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			4 & Modelado de los elementos que serán parte del espacio & 26/03/2022 & 18:00-20:00 & 2 & 364.4 \\ 
+			\hline
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			5 & Cámara sintética & 28/03/2022 & 18:00-20:00 & 2 & 364.4\\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			6 & Proyecciones &  30/03/2022 & 18:00-20:00 & 2 & 364.4 \\ 
+			\hline
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			7 & Texturizado & 2/04/2022 & 18:00-23:00 & 5 & 582.2 \\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			8 & Iluminación & 4/04/2022 & 18:00-20:00 & 2 & 232.88 \\ 
+			\hline
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			9 & Animación I & 6/04/2022 & 18:00-20:00 & 2 & 232.88 \\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			10 & Animación II  & 9/04/2022 & 18:00-20:00 & 2 & 232.88 \\ 
+			\hline
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			11 & Animación III & 11/04/2022 & 18:00-20:00 & 2 & 232.88 \\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			12 & Animación IV & 13/04/2022 & 18:00-20:00 & 2 & 232.88 \\ 
+			\hline
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			13 & Animación V & 16/04/2022 & 18:00-20:00 & 2 & 232.88 \\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			14 & Elaboración del Manual de usuario & 18/04/2022 & 18:00-20:00 & 2 & 364.4 \\ 
+			\hline
+			\rowcolor[rgb]{0.8,0.6,1.0}
+			15 & Elaboración del video  & 19/04/2022 & 18:00-19:00 & 1 & 182.2 \\ 
+			\hline
+			\rowcolor[rgb]{0.6,0.8,1.0}
+			16 & Entrega del proyecto & 20/04/2022 & de clase & 0 & sin costo \\ 
+			\hline
 		\end{tabular}
 	\end{center}
 	
+	\underline{Salario individual total:}
+	
+	\$4580.96
+	
+	\underline{Costo final}
+	
+	\$13,742.88
+	
+	\underline{Trabajos considerados:}
+	
+	Dibujante de construcción 
+	\color{gray}(116.44 por hora)\color{black}
+	, Dibujante de Ingeniería y Arquitectura 
+	\color{gray}(116.44 por hora)\color{black}
+	, Ingeniero 
+	\color{gray}(182.2 por hora)\color{black}	
+	
 	\section{Comentarios}
  	
+	\emph{Cruz Schouten Max Bernardo:}
+	La elaboración de ésta propuesta nos ayudó a tener un panorama general, además de que logramos establecer un escenario 
+	base que iremos moldeando a lo largo del proyecto. Por otro lado, nuestro cronograma nos ayudó a dividir el proyecto en 
+	tareas más pequeñas, fue interesante ver cómo afectó en el costo final a pesar de contar con modelos con licencia libre.
+	\\
+	
+	\emph{Jiménez García María Fernanda:}
+	Para la elaboración de la propuesta se establecieron objetivos generales tanto a largo, como a corto plazo, con la 
+	finalidad de dividir el trabajo eficientemente, dando continuidad y cumpliendo con los requerimientos del proyecto. 
+	Así mismo, es importante resaltar que durante el proceso de elaboración, se establecerán los objetivos particulares a 
+	cada actividad propuesta que estarán sujetos a cambios. Se tiene previsto dedicar 8 horas por semana,  los lunes, 
+	miércoles y sábados, se consideró tanto la planeación y el diseño, como la implementación que incluye modelado, 
+	texturizado, iluminación y animación, así como documentación. Para cada actividad se estableció un costo por persona, 
+	simulando un proyecto laboral. Se consideraron distintos diseños para el ambiente virtual, y la propuesta final nos pareció 
+	estética y lo suficientemente compleja para el diseño de un parque jurásico.
+	\\
+	
+	\emph{Rojas Méndez Gabriel:}
+	el haber planificado y proyectado lo que queremos desarrollar nos permite determinar tareas más precisas con las cuales 
+	buscamos optimizar tiempos en el desarrollo de este proyecto, se tiene previsto que puedan hacerse presentes algunos 
+	contratiempos pero que estos no eleven el tiempo de trabajo establecido. Además, con esta planificación se está ejecutando 
+	una buena práctica dentro del desarrollo de proyectos, con la cual se pueden dividir las tareas entre los integrantes del 
+	equipo de manera más eficiente, ya que al se tiene establecido los resultados que se quieren obtener, otro tema abordado en 
+	esta planificación es determinar costos y precio del proyecto, en donde nos basamos a los tabuladores nacionales de salarios, 
+	tiempos y nivel de dificultad, y aunque tal vez el precio tenga ciertas variaciones por nuestra falta de experiencia dentro 
+	de la temática de los precios esperamos que este sea lo más cercano a lo del mundo laboral.
+ 	
 	\section{Bibliografía}
+	
+	tlreichen (s.f.) \emph{Modelo de avatar.} ClaraIO. Recuperado el 19/03/2022
+	\color{blue}\url{https://clara.io/view/18fd810f-8b42-4ff0-9d4b-0aeb68d445b9}\color{black}
+	\\
+	
+	IMSS-SNTSS. (16/10/2020) \emph{Tabulador de sueldos para personal base.} SNTSS. 
+	\color{blue}\url{http://www.sntss.org.mx/filesUpdates/tabulador-de-sueldos.pdf}\color{black}
 	
 \end{document}	
