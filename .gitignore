@@ -5,3 +5,4 @@ Blender
 *.gz
 *.out
 Documentation/Propuesta.synctex.gz
+*.vs/
