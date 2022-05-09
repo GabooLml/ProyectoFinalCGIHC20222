@@ -5,3 +5,8 @@ Blender
 *.gz
 *.out
 Documentation/Propuesta.synctex.gz
+*.vs/
+Project/Proyecto/glm
+Project/Proyecto/include
+Project/Proyecto/lib
+Project/Proyecto/shaders
