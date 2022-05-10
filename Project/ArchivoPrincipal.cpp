@@ -4,7 +4,6 @@ Práctica 8: Iluminación 1
 */
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
-
 #include <stdio.h>
 #include <string.h>
 #include <cmath>
@@ -17,6 +16,12 @@ Práctica 8: Iluminación 1
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
+//Para el manejo de archivos
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include "Keyframe.h"
 //para probar el importer
 //#include<assimp/Importer.hpp>
 
@@ -58,6 +63,16 @@ Model Lampara_M;
 
 Skybox madrugada, dia, atardecer, noche;
 
+
+/// elementos para el acceso de archivos de animaciones
+
+std::string filename;
+std::ifstream file;
+std::istringstream stream;
+std::string line;
+std::string word;
+bool primerLinea = true;
+
 //materiales
 Material Material_brillante;
 Material Material_opaco;
@@ -73,35 +88,12 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+//Para el manejo de archivos
+std::string nombresArchivos[] = { "ejemplo.txt","ejemplo.txt" ,"ejemplo.txt" };
+Keyframe animaciones[sizeof(nombresArchivos) / sizeof(nombresArchivos[0])];
+float num_pasos, num_variables, aux, contador = 0.0f;
+std::vector<float> variablesLinea;
 
-//Variables para anmiación
-float giro;
-float giroOffset;
-float movCarro;
-float movCarroOffset;
-float giroCarro;
-float giroCarroOffset;
-
-float giroHeli;
-float giroHeliOffset;
-float movHeli;
-float movHeliOffset;
-float senHeli;
-float senHeliOffset;
-
-//Variables de control para animación
-float Xmax = 9.0f;
-float Xmin = -9.0f;
-//Variables de control para animación helicóptero
-float ZmaxHeli = 10.0f;
-float ZminHeli = -10.0f;
-//true si es adelante
-bool direccion = true;
-bool direccionHeli = true;
-//Bandera auxiliar para el cambio de dirección de luces
-bool primerCicloAdelante = true;
-bool primerCicloAtras = true;
-bool giroHelicoptero = false;
 SpotLight auxSpot = SpotLight();
 
 
@@ -181,6 +173,53 @@ int main()
 
 	CreateObjects();
 	CreateShaders();
+	//Carga de animaciones
+	int numAnimaciones = sizeof(nombresArchivos) / sizeof(nombresArchivos[0]);
+	for (int i = 0; i < numAnimaciones; i++) {
+		file.open(nombresArchivos[i], std::ifstream::in);
+		while (!file.eof()) {
+			getline(file, line);
+			printf("Line: %s\n", line.c_str());
+			if (file.good()) {
+				stream.clear();
+				stream.str(line);
+				while (stream.good()) {
+					stream >> word;
+					//Aqui asignamos los primeros valores que permiten construir el keyframe
+					if (primerLinea) {
+						if (contador == 0) {
+							num_pasos = std::stof(word.c_str());
+							printf("numpasos: %f\n", num_pasos);
+							contador = 1;
+						}
+						else {
+							num_variables = std::stof(word.c_str());
+							printf("numvariables: %f\n", num_variables);
+						}
+					}
+					else {
+						aux = std::stof(word.c_str());
+						variablesLinea.push_back(aux);
+						printf("Variable: %f\t", aux);
+					}
+				}
+			}
+			if (primerLinea) {
+				animaciones[i] = Keyframe(num_pasos, num_variables);
+			}
+			else {
+				animaciones[i].almacenaPasos(variablesLinea);
+			}
+			primerLinea = false;
+			contador = 0;
+			printf("End of line\n");
+		}
+		primerLinea = true;
+		file.close();
+	}
+	for (int i = 0; i < 3; i++) {
+		animaciones[i].imprimirValores();
+	}
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.2f, 0.5f);
 
@@ -192,6 +231,8 @@ int main()
 	plainTexture.LoadTextureA();
 	pisoTexture = Texture("Textures/piso.tga");
 	pisoTexture.LoadTextureA();
+
+
 
 	Kitt_M = Model();
 	Kitt_M.LoadModel("Models/carro.obj");
@@ -259,7 +300,7 @@ int main()
 		1.0f, 0.0f, 0.0f,
 		15.0f);
 
-	
+
 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -274,7 +315,6 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
-		printf("TTT: %f\n", now);
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
@@ -300,6 +340,7 @@ int main()
 		else {
 			glfwSetTime(0.0f);
 		}
+
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
@@ -314,7 +355,7 @@ int main()
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
-
+		glm::mat4 model(1.0);
 		// luz ligada a la cámara de tipo flash
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
@@ -325,7 +366,12 @@ int main()
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
-
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -1.4f, 0.5f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Kitt_M.RenderModel();
 
 		/*glm::mat4 model(1.0);
 		model = glm::mat4(1.0);
@@ -346,7 +392,6 @@ int main()
 		//model = glm::scale(model, glm::vec3(2.0, 1.0f, 2.0f));
 		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		//Camino_M.RenderModel();
-
 
 		glUseProgram(0);
 
