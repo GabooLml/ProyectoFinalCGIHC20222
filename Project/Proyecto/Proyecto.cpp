@@ -78,6 +78,8 @@ Model Arbol1;
 Model Arbusto;
 Model Bender;
 Model Cerca;
+Model Isla;
+Model Helipuerto;
 
 Model Kitt_M;
 Model Llanta_M;
@@ -451,7 +453,7 @@ int main()
 	CrearDodecaedro();
 	CreateShaders();
 
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.3f);
 
 	//Mis texturas
 	waterTexture = Texture("Textures/agua.tga");
@@ -479,6 +481,10 @@ int main()
 	Arbusto.LoadModel("Models/Arbusto.obj");
 	Bender = Model();
 	Bender.LoadModel("Models/Bender.obj");
+	Isla = Model();
+	Isla.LoadModel("Models/isla.obj");
+	Helipuerto = Model();
+	Helipuerto.LoadModel("Models/helipuerto.obj");
 
 	Kitt_M = Model();
 	Kitt_M.LoadModel("Models/kitt_optimizado.obj");
@@ -767,6 +773,7 @@ int main()
 
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
+		glm::mat4 roadaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
 		//Modelo del suelo
@@ -778,14 +785,98 @@ int main()
 		waterTexture.UseTexture();
 		meshList[2]->RenderMesh();
 
+		//Modelo de avatar Bender
+		model = glm::mat4(1.0);
+		roadaux = model;
+		model = glm::translate(model, glm::vec3(8.0f, 0.1f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Bender.RenderModel();
+
 		//Modelo de los caminos
 		model = glm::mat4(1.0);
+		roadaux = model;
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.5f, 1.0f, 2.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.0f, 2.5f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		grassTexture.UseTexture();
 		meshList[2]->RenderMesh();
+
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -42.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Helipuerto.RenderModel();
+
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(30.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		grassTexture.UseTexture();
+		meshList[2]->RenderMesh();
+
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(-30.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		grassTexture.UseTexture();
+		meshList[2]->RenderMesh();
+
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(55.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 2.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		grassTexture.UseTexture();
+		meshList[2]->RenderMesh();
+
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(-55.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 2.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		grassTexture.UseTexture();
+		meshList[2]->RenderMesh();
+
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(80.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		grassTexture.UseTexture();
+		meshList[2]->RenderMesh();
+
+		//Isla de cuello largo
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(54.0f, 0.0f, 45.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Isla.RenderModel();
+
+		//Isla de estegosaurio
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(-54.0f, 0.0f, 45.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Isla.RenderModel();
+
+		//Isla de tiranosaurio
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(54.0f, 0.0f, -45.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Isla.RenderModel();
+
+		//Isla de velociraptor
+		model = roadaux;
+		model = glm::translate(model, glm::vec3(-54.0f, 0.0f, -45.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Isla.RenderModel();
 
 		//Árboles de la plaza central
 		model = glm::mat4(1.0);
