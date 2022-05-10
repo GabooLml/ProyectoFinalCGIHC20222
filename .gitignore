@@ -6,6 +6,8 @@ Blender
 *.out
 Documentation/Propuesta.synctex.gz
 *.vs/
+*Debug/
+*Proyecto/Debug/
 Project/Proyecto/glm
 Project/Proyecto/include
 Project/Proyecto/lib

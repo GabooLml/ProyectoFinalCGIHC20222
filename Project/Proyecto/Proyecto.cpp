@@ -1,9 +1,8 @@
 /* Proyecto Final Semestre 2022-2
 Autores:
 	- Cruz Schouten Max Bernardo
-	-  Rojas Méndez Gabriel
+	- Rojas Méndez Gabriel
 */
-
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <stdio.h>
@@ -63,12 +62,22 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 
+//Mis texturas
+Texture waterTexture;
+Texture grassTexture;
+
 Texture brickTexture;
 Texture dirtTexture;
 Texture plainTexture;
-Texture pisoTexture;
 Texture dadoTexture;
 Texture dadoDoceTexture;
+
+//Mis modelos
+Model Arbol;
+Model Arbol1;
+Model Arbusto;
+Model Bender;
+Model Cerca;
 
 Model Kitt_M;
 Model Llanta_M;
@@ -83,7 +92,6 @@ Model Tiranosaurio;
 Model Brachiosaurus;
 Model Poste;
 Model Faro;
-Model Pista;
 
 Skybox skybox;
 
@@ -205,6 +213,227 @@ void CreateObjects()
 	meshList.push_back(obj4);
 }
 
+void CrearDado()
+{
+	unsigned int cubo_indices[] = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+		// right
+		4, 5, 6,
+		6, 7, 4,
+		// back
+		8, 9, 10,
+		10, 11, 8,
+
+		// left
+		12, 13, 14,
+		14, 15, 12,
+		// bottom
+		16, 17, 18,
+		18, 19, 16,
+		// top
+		20, 21, 22,
+		22, 23, 20,
+	};
+
+	//Ejercicio 1: reemplazar con sus dados de 6 caras texturizados, agregar normales
+// average normals
+	GLfloat cubo_vertices[] = {
+		// front
+		//x		y		z		S		T			NX		NY		NZ
+		-0.5f, -0.5f,  0.5f,	0.51f,  0.34f,		0.0f,	0.0f,	-1.0f,	//0
+		0.5f, -0.5f,  0.5f,		0.74f,	0.34f,		0.0f,	0.0f,	-1.0f,	//1
+		0.5f,  0.5f,  0.5f,		0.74f,	0.65f,		0.0f,	0.0f,	-1.0f,	//2
+		-0.5f,  0.5f,  0.5f,	0.51f,	0.65f,		0.0f,	0.0f,	-1.0f,	//3
+		// right
+		//x		y		z		S		T
+		0.5f, -0.5f,  0.5f,	    0.75f,  0.33f,		-1.0f,	0.0f,	0.0f,
+		0.5f, -0.5f,  -0.5f,	1.0f,	0.33f,		-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  -0.5f,	1.0f,	0.66f,		-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  0.5f,	    0.75f,	0.66f,		-1.0f,	0.0f,	0.0f,
+
+		// back
+		-0.5f, -0.5f, -0.5f,	0.0f,  0.33f,		0.0f,	0.0f,	1.0f,
+		0.5f, -0.5f, -0.5f,		0.25f,	0.33f,		0.0f,	0.0f,	1.0f,
+		0.5f,  0.5f, -0.5f,		0.25f,	0.66f,		0.0f,	0.0f,	1.0f,
+		-0.5f,  0.5f, -0.5f,	0.0f,	0.66f,		0.0f,	0.0f,	1.0f,
+
+		// left
+		//x		y		z		S		T
+		-0.5f, -0.5f,  -0.5f,	0.25f,  0.33f,		1.0f,	0.0f,	0.0f,
+		-0.5f, -0.5f,  0.5f,	0.5f,	0.33f,		1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  0.5f,	0.5f,	0.66f,		1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  -0.5f,	0.25f,	0.66f,		1.0f,	0.0f,	0.0f,
+
+		// bottom
+		//x		y		z		S		T
+		-0.5f, -0.5f,  0.5f,	0.25f,  0.0f,		0.0f,	1.0f,	0.0f,
+		0.5f,  -0.5f,  0.5f,	0.5f,	0.0f,		0.0f,	1.0f,	0.0f,
+		 0.5f,  -0.5f,  -0.5f,	0.5f,	0.33f,		0.0f,	1.0f,	0.0f,
+		-0.5f, -0.5f,  -0.5f,	0.25f,	0.33f,		0.0f,	1.0f,	0.0f,
+
+		//UP
+		 //x		y		z		S		T
+		 -0.5f, 0.5f,  0.5f,	0.5f,  0.66f,		0.0f,	-1.0f,	0.0f,
+		 0.5f,  0.5f,  0.5f,	0.75f,	0.66f,		0.0f,	-1.0f,	0.0f,
+		  0.5f, 0.5f,  -0.5f,	0.75f,	1.0f,		0.0f,	-1.0f,	0.0f,
+		 -0.5f, 0.5f,  -0.5f,	0.5f,	1.0f,		0.0f,	-1.0f,	0.0f,
+
+	};
+
+	Mesh* dado = new Mesh();
+	dado->CreateMesh(cubo_vertices, cubo_indices, 192, 36);
+	meshList.push_back(dado);
+}
+
+void CrearDodecaedro()
+{
+	unsigned int dodecaedro_indices[] = {
+		// Cara 1
+		0, 1, 2,
+		0, 2, 3,
+		0, 3, 4,
+		// Cara 4
+		5, 6, 7,
+		5, 7, 8,
+		5, 8, 9,
+		// Cara 6
+		10, 11, 12,
+		10, 12, 13,
+		10, 13, 14,
+		// Cara 5
+		15, 16, 17,
+		15, 17, 18,
+		15, 18, 19,
+		// Cara 3
+		20, 21, 22,
+		20, 22, 23,
+		20, 23, 24,
+		// Cara 2
+		25, 26, 27,
+		25, 27, 28,
+		25, 28, 29,
+		// Cara 11
+		30, 31, 32,
+		30, 32, 33,
+		30, 33, 34,
+		// Cara 9
+		35, 36, 37,
+		35, 37, 38,
+		35, 38, 39,
+		// Cara 7
+		40, 41, 42,
+		40, 42, 43,
+		40, 43, 44,
+		// Cara 8
+		45, 46, 47,
+		45, 47, 48,
+		45, 48, 49,
+		// Cara 10
+		50, 51, 52,
+		50, 52, 53,
+		50, 53, 54,
+		// Cara 12
+		55, 56, 57,
+		55, 57, 58,
+		55, 58, 59
+	};
+
+	GLfloat dodecaedro_vertices[] = {
+		// front
+		// X	      Y		       Z		  U		      V          Nx          Ny          NZ
+		//Cara 1
+		 1.620f,	0.900f,		-2.750f,	0.580f,		0.199f,		-0.530f,	-0.720f,	0.450f,//0
+		 0.000f,	2.080f,		-2.750f,	0.426f,		0.125f,		-0.530f,	-0.720f,	0.450f,//1
+		 0.000f,	3.130f,		-1.050f,	0.484f,		0.002f,		-0.530f,	-0.720f,	0.450f,//2
+		 1.620f,	2.600f,		 0.000f,	0.678f,		0.002f,		-0.530f,	-0.720f,	0.450f,//3
+		 2.620f,	1.230f,		-1.050f,	0.734f,		0.123f,		-0.530f,	-0.720f,	0.450f,//4
+
+		//Cara 2
+		 0.000f,	2.080f,		-2.750f,	0.420f,		0.133f,		 0.000f,	 0.000f,	1.000f,//5
+		 1.620f,	0.900f,		-2.750f,	0.572f,		0.207f,		 0.000f,	 0.000f,	1.000f,//6
+		 1.000f,   -1.000f,	    -2.750f,	0.516f,		0.326f,		 0.000f,	 0.000f,	1.000f,//7
+		-1.000f,   -1.000f,		-2.750f,	0.324f,		0.326f,		 0.000f,	 0.000f,	1.000f,//8
+		-1.620f,	0.900f,		-2.750f,	0.266f,		0.207f,		 0.000f,	 0.000f,	1.000f,//9
+
+		//Cara 3
+		 0.000f,	2.080f,		-2.750f,	0.410f,		0.123f,		 0.530f,	-0.720f,	0.450f,//10
+		-1.620f,	0.900f,		-2.750f,	0.258f,		0.197f,		 0.530f,	-0.720f,	0.450f,//11
+		-2.620f,	1.230f,		-1.050f,	0.104f,		0.123f,	 	 0.530f,	-0.720f,	0.450f,//12
+		-1.620f,	2.600f,		 0.000f,	0.160f,		0.002f,		 0.530f,	-0.720f,	0.450f,//13
+		 0.000f,	3.130f,		-1.050f,	0.354f,		0.002f,		 0.530f,	-0.720f,	0.450f,//14
+
+		//Cara 4
+		 1.000f,   -1.000f,		-2.750f,	0.527f,		0.330f,		-0.850f,	 0.280f,	0.450f,//15
+		 1.620f,	0.900f,		-2.750f,	0.584f,		0.209f,	    -0.850f,	 0.280f,	0.450f,//16
+		 2.620f,	1.230f,	    -1.050f,	0.775f,		0.209f,		-0.850f,	 0.280f,	0.450f,//17
+		 2.620f,   -0.470f,		 0.000f,	0.836f,		0.330f,		-0.850f,	 0.280f,	0.450f,//18
+		 1.620f,   -1.850f,		-1.050f,	0.682f,		0.406f,		-0.850f,	 0.280f,	0.450f,//19
+
+		//Cara 5
+		 1.000f,	1.750f,		 1.700f,	0.742f,		0.801f,		 0.000f,	-0.890f,   -0.450f,//20
+		 1.620f,	2.600f,		 0.000f,	0.896f,		0.877f,		 0.000f,	-0.890f,   -0.450f,//21
+		 0.000f,	3.130f,		-1.050f,	0.838f,		0.998f,		 0.000f,	-0.890f,   -0.450f,//22
+		-1.620f,	2.600f,		 0.000f,	0.646f,		0.998f,		 0.000f,	-0.890f,   -0.450f,//23
+		-1.000f,	1.750f,		 1.700f,	0.590f,		0.875f,		 0.000f,	-0.890f,   -0.450f,//24
+
+		//Cara 6
+		 1.620f,   -0.150f,		 1.700f,	0.689f,		0.668f,		-0.850f,	-0.280f,   -0.450f,//25
+		 2.620f,   -0.470f,		 0.000f,	0.842f,		0.594f,		-0.850f,	-0.280f,   -0.450f,//26
+		 2.620f,	1.230f,		-1.050f,	0.996f,		0.670f,		-0.850f,	-0.280f,   -0.450f,//27
+		 1.620f,	2.600f,		 0.000f,	0.939f,		0.791f,		-0.850f,	-0.280f,   -0.450f,//28
+		 1.000f,	1.750f,		 1.700f,	0.746f,		0.791f,		-0.850f,	-0.280f,   -0.450f,//29
+
+		 //Cara 7
+		-1.620f,	0.900f,		-2.750f,	0.254f,		0.209f,		 0.850f,	 0.280f,	0.450f,//30
+		-1.000f,   -1.000f,		-2.750f,	0.311f,		0.330f,		 0.850f,	 0.280f,	0.450f,//31
+		-1.620f,   -1.850f,		-1.050f,	0.156f,		0.406f,		 0.850f,	 0.280f,	0.450f,//32
+		-2.620f,   -0.470f,		 0.000f,	0.004f,		0.332f,		 0.850f,	 0.280f,	0.450f,//33
+		-2.620f,	1.230f,		-1.050f,	0.061f,		0.209f,		 0.850f,	 0.280f,	0.450f,//34
+
+		//Cara 8
+		-1.000f,   -1.000f,		-2.750f,	0.322f,		0.338f,		 0.000f,	 0.890f,	0.450f,//35
+		 1.000f,   -1.000f,		-2.750f,	0.516f,		0.338f,		 0.000f,	 0.890f,	0.450f,//36
+		 1.620f,   -1.850f,		-1.050f,	0.574f,		0.457f,		 0.000f,	 0.890f,	0.450f,//37
+		 0.000f,   -2.380f,		 0.000f,	0.418f,		0.533f,		 0.000f,	 0.890f,	0.450f,//38
+		-1.620f,   -1.850f,		-1.050f,	0.266f,		0.459f,		 0.000f,	 0.890f,	0.450f,//39
+
+		//Cara 9
+		-1.000f,	1.750f,		 1.700f,	0.572f,		0.877f,		 0.850f,	-0.280f,   -0.450f,//40
+		-1.620f,	2.600f,		 0.000f,	0.514f,		0.998f,		 0.850f,	-0.280f,   -0.450f,//41
+		-2.620f,	1.230f,		-1.050f,	0.322f,		0.998f,		 0.850f,	-0.280f,   -0.450f,//42
+		-2.620f,   -0.470f,		 0.000f,	0.266f,		0.875f,		 0.850f,	-0.280f,   -0.450f,//43
+		-1.620f,   -0.150f,		 1.700f,	0.420f,		0.801f,		 0.850f,	-0.280f,   -0.450f,//44
+
+		//Cara 10
+		 0.000f,   -1.320f,		 1.700f,	0.484f,		0.662f,		-0.530f,	 0.720f,   -0.450f,//45
+		 0.000f,   -2.380f,		 0.000f,	0.428f,		0.541f,		-0.530f,	 0.720f,   -0.450f,//46
+		 1.620f,   -1.850f,		-1.050f,	0.582f,		0.467f,		-0.530f,	 0.720f,   -0.450f,//47
+		 2.620f,   -0.470f,		 0.000f,	0.736f,		0.541f,		-0.530f,	 0.720f,   -0.450f,//48
+		 1.620f,   -0.150f,		 1.700f,	0.676f,		0.662f,		-0.530f,	 0.720f,   -0.450f,//49
+
+		//Cara 11
+		 0.000f,   -1.320f,		 1.700f,	0.484f,		0.672f,		 0.000f,	 0.000f,   -1.000f,//50
+		 1.620f,   -0.150f,		 1.700f,	0.676f,		0.672f,		 0.000f,	 0.000f,   -1.000f,//51
+		 1.000f,	1.750f,		 1.700f,	0.734f,		0.793f,		 0.000f,	 0.000f,   -1.000f,//52
+		-1.000f,	1.750f,		 1.700f,	0.580f,		0.869f,		 0.000f,	 0.000f,   -1.000f,//53
+		-1.620f,   -0.150f,		 1.700f,	0.428f,		0.793f,		 0.000f,	 0.000f,   -1.000f,//54
+
+		//Cara 12
+		-1.620f,   -0.150f,		 1.700f,	0.414f,		0.791f,		 0.530f,	 0.720f,   -0.450f,//55
+		-2.620f,   -0.470f,		 0.000f,	0.225f,		0.791f,		 0.530f,	 0.720f,   -0.450f,//56
+		-1.620f,   -1.850f,		-1.050f,	0.166f,		0.670f,		 0.530f,	 0.720f,   -0.450f,//57
+		 0.000f,   -2.380f,		 0.000f,	0.318f,		0.594f,		 0.530f,	 0.720f,   -0.450f,//58
+		 0.000f,   -1.320f,		 1.700f,	0.473f,		0.670f,		 0.530f,	 0.720f,   -0.450f//59
+
+
+	};
+	Mesh* dodecaedro = new Mesh();
+	dodecaedro->CreateMesh(dodecaedro_vertices, dodecaedro_indices, 600, 108);
+	meshList.push_back(dodecaedro);
+}
+
 void CreateShaders()
 {
 	Shader *shader1 = new Shader();
@@ -218,9 +447,17 @@ int main()
 	mainWindow.Initialise();
 
 	CreateObjects();
+	CrearDado();
+	CrearDodecaedro();
 	CreateShaders();
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.5f, 0.5f);
+
+	//Mis texturas
+	waterTexture = Texture("Textures/agua.tga");
+	waterTexture.LoadTextureA();
+	grassTexture = Texture("Textures/cesped.tga");
+	grassTexture.LoadTextureA();
 
 	brickTexture = Texture("Textures/brick.png");
 	brickTexture.LoadTextureA();
@@ -228,8 +465,20 @@ int main()
 	dirtTexture.LoadTextureA();
 	plainTexture = Texture("Textures/plain.png");
 	plainTexture.LoadTextureA();
-	pisoTexture = Texture("Textures/piso.tga");
-	pisoTexture.LoadTextureA();
+	dadoTexture = Texture("Textures/mi_dado.tga");
+	dadoTexture.LoadTextureA();
+	dadoDoceTexture = Texture("Textures/dodecaedro.tga");
+	dadoDoceTexture.LoadTextureA();
+
+	//Mis modelos
+	Arbol = Model();
+	Arbol.LoadModel("Models/arbol1.obj");
+	Arbol1 = Model();
+	Arbol1.LoadModel("Models/arbol2.obj");
+	Arbusto = Model();
+	Arbusto.LoadModel("Models/Arbusto.obj");
+	Bender = Model();
+	Bender.LoadModel("Models/Bender.obj");
 
 	Kitt_M = Model();
 	Kitt_M.LoadModel("Models/kitt_optimizado.obj");
@@ -258,13 +507,14 @@ int main()
 	Faro = Model();
 	Faro.LoadModel("Models/Lampara.obj");
 
+
 	std::vector<std::string> skyboxFaces;
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_dn.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_up.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_bk.tga");
-	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_ft.tga");
+	skyboxFaces.push_back("Textures/Skybox/skybox_right.tga");
+	skyboxFaces.push_back("Textures/Skybox/skybox_left.tga");
+	skyboxFaces.push_back("Textures/Skybox/skybox_bottom.tga");
+	skyboxFaces.push_back("Textures/Skybox/skybox_top.tga");
+	skyboxFaces.push_back("Textures/Skybox/skybox_back.tga");
+	skyboxFaces.push_back("Textures/Skybox/skybox_front.tga");
 
 	skybox = Skybox(skyboxFaces);
 
@@ -501,7 +751,6 @@ int main()
 		//información en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
-
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
@@ -522,12 +771,53 @@ int main()
 
 		//Modelo del suelo
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		pisoTexture.UseTexture();
+		waterTexture.UseTexture();
 		meshList[2]->RenderMesh();
+
+		//Modelo de los caminos
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.5f, 1.0f, 2.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		grassTexture.UseTexture();
+		meshList[2]->RenderMesh();
+
+		//Árboles de la plaza central
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Arbol1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 15.0));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Arbol.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -15.0));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Arbol.RenderModel();
+
+		//Postes de la plaza central
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 8.0f));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Poste.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -8.0f));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Poste.RenderModel();
 		
 		//Mi auto
 		model = glm::mat4(1.0);
@@ -648,21 +938,21 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Faro.RenderModel();
 
-		//Modelo de tiranosaurio
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, -20.0f));
-		color = glm::vec3(0.13f, 0.5f, 0.18f);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		Tiranosaurio.RenderModel();
+		////Modelo de tiranosaurio
+		//model = glm::mat4(1.0);
+		//model = glm::translate(model, glm::vec3(0.0f, -2.0f, -20.0f));
+		//color = glm::vec3(0.13f, 0.5f, 0.18f);
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		//Tiranosaurio.RenderModel();
 
-		//Modelo de cuello largo
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 30.0f));
-		color = glm::vec3(0.13f, 0.5f, 0.4f);
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		Brachiosaurus.RenderModel();
+		////Modelo de cuello largo
+		//model = glm::mat4(1.0);
+		//model = glm::translate(model, glm::vec3(0.0f, -2.0f, 30.0f));
+		//color = glm::vec3(0.13f, 0.5f, 0.4f);
+		//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		//Brachiosaurus.RenderModel();
 
 		//Cubo de OpenGL
 		model = glm::mat4(1.0);
@@ -688,18 +978,6 @@ int main()
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		dadoDoceTexture.UseTexture();
 		meshList[5]->RenderMesh();
-
-		//Poste 1
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-30.0f, 0.0f, 18.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Poste.RenderModel();
-
-		//Poste 2
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(-30.0f, 0.0f, -8.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Poste.RenderModel();
 
 		glUseProgram(0);
 		mainWindow.swapBuffers();
