@@ -17,7 +17,7 @@ void Keyframe::animate(bool* play)
 		{
 			playIndex++;
 			printf("playindex : %d\n", playIndex);
-			if (playIndex > frames.size() - 2)	//end of total animation?
+			if (playIndex > frames.size() - 3)	//end of total animation?
 			{
 				printf("Frame index= %d\n", playIndex);
 				printf("termina anim\n");
@@ -32,9 +32,9 @@ void Keyframe::animate(bool* play)
 		else
 		{
 			//Draw animation
-			for (int i = 0; i < valores.size(); i++) {
-				printf("Valor de animacion: \n");
+			for (int i = 0; i < frames[playIndex].size(); i++) {
 				valores[i] += incrementales[playIndex][i];
+				printf("Valor de animacion [%d][%d]: %f\n",playIndex, i , valores[i]);
 			}
 			i_current_step++;
 		}
@@ -53,13 +53,11 @@ void Keyframe::almacenaPasos(std::vector<float> paso)
 }
 void Keyframe::generaInterpolaciones(void)
 {
-	int iteraciones = frames.size() - 2;
+	int iteraciones = frames.size() - 3;
 	std::vector<float> aux;
 	for (int i = 0; i <= iteraciones; i++) {
 		aux = {};
 		for (int j = 0; j < frames[i].size(); j++) {
-			printf("Valores actuales [%d][%d] valor: %f\n", i, j, frames[i][j]);
-			printf("Generando interpolaciones [%d][%d] valor: %f\n", i, j, (frames[i + 1][j] - frames[i][j]) / num_pasos);
 			aux.push_back((frames[i + 1][j] - frames[i][j]) / num_pasos);
 		}
 		incrementales.push_back(aux);
@@ -67,13 +65,19 @@ void Keyframe::generaInterpolaciones(void)
 }
 
 void Keyframe::imprimirValores(void) {
-	printf("De los frames");
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			printf(" %d \t", frames[i][j]);
+	printf("De los frames\n");
+	printf(" Par inicial: %f, %f\n", num_pasos, num_variables);
+	for (int i = 0; i < frames.size() - 1; i++) {
+		for (int j = 0; j < frames[i].size(); j++) {
+			printf(" %f \t", frames[i][j]);
 		}
 		printf("\n");
 	}
+
+}
+
+float Keyframe::getValor(int index) {
+	return valores[index];
 
 }
 Keyframe::~Keyframe()

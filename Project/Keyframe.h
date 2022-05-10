@@ -17,11 +17,12 @@ public:
 	void animate(bool* play);
 	void generaInterpolaciones(void);
 	void imprimirValores(void);
+	float getValor(int);
 	~Keyframe();
 
 private:
-	int num_variables;
-	int num_pasos;
+	float num_variables;
+	float num_pasos;
 	int playIndex = 0;
 	//Valor del primer frame, representa el valor actual del modelo asociado a la animación.
 	std::vector<float> valores;

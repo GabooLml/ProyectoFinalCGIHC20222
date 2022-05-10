@@ -88,11 +88,14 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+
 //Para el manejo de archivos
-std::string nombresArchivos[] = { "ejemplo.txt","ejemplo.txt" ,"ejemplo.txt" };
+std::string nombresArchivos[] = {"ejemplo.txt" };
 Keyframe animaciones[sizeof(nombresArchivos) / sizeof(nombresArchivos[0])];
 float num_pasos, num_variables, aux, contador = 0.0f;
 std::vector<float> variablesLinea;
+bool animate = false;
+
 
 SpotLight auxSpot = SpotLight();
 
@@ -179,7 +182,6 @@ int main()
 		file.open(nombresArchivos[i], std::ifstream::in);
 		while (!file.eof()) {
 			getline(file, line);
-			printf("Line: %s\n", line.c_str());
 			if (file.good()) {
 				stream.clear();
 				stream.str(line);
@@ -189,18 +191,15 @@ int main()
 					if (primerLinea) {
 						if (contador == 0) {
 							num_pasos = std::stof(word.c_str());
-							printf("numpasos: %f\n", num_pasos);
 							contador = 1;
 						}
 						else {
 							num_variables = std::stof(word.c_str());
-							printf("numvariables: %f\n", num_variables);
 						}
 					}
 					else {
 						aux = std::stof(word.c_str());
 						variablesLinea.push_back(aux);
-						printf("Variable: %f\t", aux);
 					}
 				}
 			}
@@ -211,15 +210,13 @@ int main()
 				animaciones[i].almacenaPasos(variablesLinea);
 			}
 			primerLinea = false;
+			variablesLinea.clear();
 			contador = 0;
-			printf("End of line\n");
 		}
 		primerLinea = true;
 		file.close();
 	}
-	for (int i = 0; i < 3; i++) {
-		animaciones[i].imprimirValores();
-	}
+	
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.2f, 0.5f);
 
@@ -232,7 +229,7 @@ int main()
 	pisoTexture = Texture("Textures/piso.tga");
 	pisoTexture.LoadTextureA();
 
-
+	
 
 	Kitt_M = Model();
 	Kitt_M.LoadModel("Models/carro.obj");
@@ -300,7 +297,7 @@ int main()
 		1.0f, 0.0f, 0.0f,
 		15.0f);
 
-
+	
 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -329,6 +326,7 @@ int main()
 			madrugada.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
 		else if (now >= 15.0f && now < 30.0f) {
+			animate = true;
 			dia.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
 		else if (now >= 30.0f && now < 45.0f) {
@@ -366,8 +364,9 @@ int main()
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
+		animaciones[0].animate(&animate);
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -1.4f, 0.5f));
+		model = glm::translate(model, glm::vec3(0.0f + animaciones[0].getValor(4), -1.4f, 0.5f));
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
