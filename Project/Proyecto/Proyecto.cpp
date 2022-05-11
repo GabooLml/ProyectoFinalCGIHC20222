@@ -15,6 +15,11 @@ Autores:
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
+//Para animaciones y archivos
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
 
 //para probar el importer
 //#include<assimp/Importer.hpp>
@@ -26,6 +31,7 @@ Autores:
 #include "Sphere.h"
 #include"Model.h"
 #include "Skybox.h"
+#include "Keyframe.h"
 
 //Para ilumininación
 #include "CommonValues.h"
@@ -80,14 +86,13 @@ Model Bender;
 Model Cerca;
 Model Isla;
 Model Helipuerto;
+Model Mi_Auto1;
 
 Model Kitt_M;
 Model Llanta_M;
 Model Blackhawk_M;
 Model Dado_M;
 Model Mi_Auto;
-Model Mi_Auto1;
-Model Mi_Llanta;
 Model Helice;
 Model Helice_T;
 Model Tiranosaurio;
@@ -112,6 +117,20 @@ DirectionalLight mainLight;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+
+/// elementos para el acceso de archivos de animaciones y keyframes
+
+std::string filename;
+std::ifstream file;
+std::istringstream stream;
+std::string line;
+std::string word;
+bool primerLinea = true;
+std::string nombresArchivos[] = { "ejemplo.txt" };
+Keyframe animaciones[sizeof(nombresArchivos) / sizeof(nombresArchivos[0])];
+float num_pasos, num_variables, aux, contador = 0.0f;
+std::vector<float> variablesLinea;
+bool animate = false; 
 
 // Vertex Shader
 static const char* vShader = "shaders/shader_light.vert";
@@ -452,8 +471,48 @@ int main()
 	CrearDado();
 	CrearDodecaedro();
 	CreateShaders();
+	//Carga de animaciones
+	int numAnimaciones = sizeof(nombresArchivos) / sizeof(nombresArchivos[0]);
+	for (int i = 0; i < numAnimaciones; i++) {
+		file.open(nombresArchivos[i], std::ifstream::in);
+		while (!file.eof()) {
+			getline(file, line);
+			if (file.good()) {
+				stream.clear();
+				stream.str(line);
+				while (stream.good()) {
+					stream >> word;
+					//Aqui asignamos los primeros valores que permiten construir el keyframe
+					if (primerLinea) {
+						if (contador == 0) {
+							num_pasos = std::stof(word.c_str());
+							contador = 1;
+						}
+						else {
+							num_variables = std::stof(word.c_str());
+						}
+					}
+					else {
+						aux = std::stof(word.c_str());
+						variablesLinea.push_back(aux);
+					}
+				}
+			}
+			if (primerLinea) {
+				animaciones[i] = Keyframe(num_pasos, num_variables);
+			}
+			else {
+				animaciones[i].almacenaPasos(variablesLinea);
+			}
+			primerLinea = false;
+			variablesLinea.clear();
+			contador = 0;
+		}
+		primerLinea = true;
+		file.close();
+	}
 
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.3f);
+	camera = Camera(glm::vec3(8.0f, 5.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 0.3f);
 
 	//Mis texturas
 	waterTexture = Texture("Textures/agua.tga");
@@ -500,8 +559,6 @@ int main()
 	Mi_Auto.LoadModel("Models/LowPoly Muscle Cougar xr1970.obj");
 	Mi_Auto1 = Model();
 	Mi_Auto1.LoadModel("Models/muscle.obj");
-	Mi_Llanta = Model();
-	Mi_Llanta.LoadModel("Models/llanta_muscle.obj");
 	Tiranosaurio = Model();
 	Tiranosaurio.LoadModel("Models/tiranosaurio.obj");
 	Brachiosaurus = Model();
@@ -742,6 +799,7 @@ int main()
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		printf("Posicion Y %f", mainWindow.getYChange());
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -788,10 +846,12 @@ int main()
 		//Modelo de avatar Bender
 		model = glm::mat4(1.0);
 		roadaux = model;
+		animaciones[0].animate(&animate);
 		model = glm::translate(model, glm::vec3(8.0f, 0.1f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Bender.RenderModel();
+		animate = true;
 
 		//Modelo de los caminos
 		model = glm::mat4(1.0);
@@ -920,36 +980,6 @@ int main()
 		Mi_Auto1.RenderModel();
 
 		spotLights[luz].SetPos(glm::vec3(5.0f + movCoche, 2.5f, 9.0f));
-
-		//Llanta izquierda delantera
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(-2.6f, 0.4f, 1.5));
-		model = glm::rotate(model, -rotLlanta, glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Mi_Llanta.RenderModel();
-
-		//Llanta izquierda trasera
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(2.525f, 0.4f, 1.5));
-		model = glm::rotate(model, -rotLlanta, glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Mi_Llanta.RenderModel();
-
-		//Llanta derecha delantera
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(-2.6f, 0.4f, -1.4));
-		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, rotLlanta, glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Mi_Llanta.RenderModel();
-
-		//Llanta derecha trasera
-		model = modelaux;
-		model = glm::translate(model, glm::vec3(2.525f, 0.4f, -1.4));
-		model = glm::rotate(model, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, rotLlanta, glm::vec3(0.0f, 0.0f, 1.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		Mi_Llanta.RenderModel();
 
 		//Modelo del vehículo
 		model = glm::mat4(1.0);

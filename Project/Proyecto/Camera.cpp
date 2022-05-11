@@ -19,25 +19,29 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 void Camera::keyControl(bool* keys, GLfloat deltaTime)
 {
 	GLfloat velocity = moveSpeed * deltaTime;
-
+	glm::vec3 aux;
 	if (keys[GLFW_KEY_W])
 	{
-		position += front * velocity;
+		aux = glm::vec3(front.x, 0.0f, front.z);
+		position += aux * velocity;
 	}
 
 	if (keys[GLFW_KEY_S])
 	{
-		position -= front * velocity;
+		aux = glm::vec3(front.x, 0.0f, front.z);
+		position -= aux * velocity;
 	}
 
 	if (keys[GLFW_KEY_A])
 	{
-		position -= right * velocity;
+		aux = glm::vec3(right.x, 0.0f, right.z);
+		position -= aux * velocity;
 	}
 
 	if (keys[GLFW_KEY_D])
 	{
-		position += right * velocity;
+		aux = glm::vec3(right.x, 0.0f, right.z);
+		position += aux * velocity;
 	}
 }
 
