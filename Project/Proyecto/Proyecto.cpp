@@ -41,11 +41,14 @@ Autores:
 #include "Material.h"
 
 const float toRadians = 3.14159265f / 180.0f;
-//Mis variables
+//Variables para animación del tiranosaurio
 float movPiernaRT;
 float movPiernaLT;
 float movOffsetT;
+float rotColaT;
+float rotColaTOffset;
 bool movTirano;
+bool movTiranoCola;
 
 float movCoche;
 float movOffset;
@@ -327,7 +330,7 @@ int main()
 	PiernaLT = Model();
 	PiernaLT.LoadModel("Models/piernaLTirano1.obj");
 	ColaT = Model();
-	ColaT.LoadModel("Models/colaTiranosaurio.obj");
+	ColaT.LoadModel("Models/colaTiranosaurio1.obj");
 	CuelloL = Model();
 	CuelloL.LoadModel("Models/cuelloLargoVC.obj");
 
@@ -413,10 +416,12 @@ int main()
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	
-	//Mis variables para animación
+	//Variables para animación del tiranosaurio
 	movPiernaRT = 0.0f;
 	movPiernaLT = 0.0f;
 	movOffsetT = 0.05;
+	rotColaT = 0.0f;
+	rotColaTOffset = 0.03;
 
 	//Variables para las animaciones
 	movCoche = 0.0f;
@@ -595,6 +600,24 @@ int main()
 			rotacionP = 0.0f;
 		}
 
+		//Animación de la cola del tiranosaurio
+		if (rotColaT < 10.0f and movTiranoCola == false)
+		{
+			rotColaT += rotColaTOffset * deltaTime;
+			if (rotColaT > 9.0f)
+			{
+				movTiranoCola = true;
+			}
+		}
+		else 
+		{
+			rotColaT -= rotColaTOffset * deltaTime;
+			if (rotColaT < -9.0f)
+			{
+				movTiranoCola = false;
+			}
+		}
+
 		//Recibir eventos del usuario
 		glfwPollEvents();
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
@@ -635,16 +658,8 @@ int main()
 		glm::mat4 tiranoaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-		//Modelo del suelo
-		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-		waterTexture.UseTexture();
-		meshList[2]->RenderMesh();
 
-		//Modelo de avatar Bender
+		////////////////////////////////// MODELO AVATAR BENDER ///////////////////////////////////
 		model = glm::mat4(1.0);
 		roadaux = model;
 		animaciones[0].animate(&animate);
@@ -654,7 +669,17 @@ int main()
 		Bender.RenderModel();
 		animate = true;
 
-		//Modelo de los caminos
+		////////////////////////////////////// GENERACIÓN DE LOS ELEMENTOS DEL ESCENARIO ///////////////////
+		////////////////// SUELO, POSTES, ÁRBOLES, ISLAS Y HELIPUERTO ////////////////////////////
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(15.0f, 1.0f, 15.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		waterTexture.UseTexture();
+		meshList[2]->RenderMesh();
+
+		//MODELOS DE CAMINOS
 		model = glm::mat4(1.0);
 		roadaux = model;
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -747,6 +772,20 @@ int main()
 		Arbol1.RenderModel();
 
 		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(27.5f, 0.0f, 0.0));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Arbol1.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-27.5f, 0.0f, 0.0));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		model = glm::rotate(model, 90 * toRadians, glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Arbol1.RenderModel();
+
+		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 15.0));
 		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -754,6 +793,18 @@ int main()
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -15.0));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Arbol.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-42.5f, 0.0f, 0.0));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Arbol.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(42.5f, 0.0f, 0.0));
 		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Arbol.RenderModel();
@@ -771,7 +822,19 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Poste.RenderModel();
 
-		//Render del helicóptero
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-55.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Poste.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(55.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Poste.RenderModel();
+
+		////////////////////////////////// MODELO HELICOPTERO ////////////////////////////////////////
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(25.0f, 15.0f, -15.0f));
 		model = glm::translate(model, glm::vec3(movHelicopteroX, 2 * sin(angulo), mainWindow.getHelicopterZ()));
@@ -797,7 +860,7 @@ int main()
 		//Luz del helicoptero
 		spotLights[3].SetPos(glm::vec3(25.0f + movHelicopteroX, 15.0, -15.0f + mainWindow.getHelicopterZ()));
 
-		//Modelo de tiranosaurio
+		//////////////////////////////////// MODELO DEL TIRANOSAURIO ///////////////////////////////////////
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-55.0f, 0.0f, -20.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -819,10 +882,12 @@ int main()
 
 		//Cola del tiranosaurio
 		model = tiranoaux;
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.02f));
+		model = glm::rotate(model, toRadians * rotColaT, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		ColaT.RenderModel();
 
-		//Modelo de cuello largo
+		////////////////////////////// MODELO DE CUELLO LARGO ///////////////////////////////////
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(-55.0f, 0.0f, 20.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
