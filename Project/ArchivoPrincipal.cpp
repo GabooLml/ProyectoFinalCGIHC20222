@@ -46,7 +46,7 @@ Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
-Camera camera;
+Camera camera, cameraHeli;
 
 Texture brickTexture;
 Texture dirtTexture;
@@ -167,13 +167,18 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+////////////////////////////////////
+/// VARIABLES DE CONTROL PARA CUALQUIER COSA
+////////////////////////////////////
+bool personaje = true;
 
 
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
 	mainWindow.Initialise();
-
+	
+	mainWindow.linkBools(&personaje);
 	CreateObjects();
 	CreateShaders();
 	//Carga de animaciones
@@ -219,6 +224,7 @@ int main()
 	
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.2f, 0.5f);
+	cameraHeli = Camera(glm::vec3(-10.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.2f, 0.5f);
 
 	brickTexture = Texture("Textures/brick.png");
 	brickTexture.LoadTextureA();
@@ -283,7 +289,7 @@ int main()
 
 	//luz direccional, sólo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-		0.4f, 0.0f,
+		0.2f, 0.0f,
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
@@ -304,7 +310,7 @@ int main()
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
-
+	animate = true;
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -315,24 +321,35 @@ int main()
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
-		camera.keyControl(mainWindow.getsKeys(), deltaTime);
-		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		if (personaje) {
+			camera.keyControl(mainWindow.getsKeys(), deltaTime);
+			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		}
+		else {
+			cameraHeli.keyControl(mainWindow.getsKeys(), deltaTime);
+			cameraHeli.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+		}
+		
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//Lógica ciclo dia noche
 		if (now >= 0.0f && now < 15.0f) {
+			mainLight.setAintensity(0.4);
 			madrugada.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
 		else if (now >= 15.0f && now < 30.0f) {
-			animate = true;
+			mainLight.setAintensity(0.8);
 			dia.DrawSkybox(camera.calculateViewMatrix(), projection);
+			//camera.changeYawPitch(90.0f, 0.0f);
 		}
 		else if (now >= 30.0f && now < 45.0f) {
+			mainLight.setAintensity(0.6);
 			atardecer.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
 		else if (now >= 45.0f && now < 60.0f) {
+			mainLight.setAintensity(0.2);
 			noche.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
 		else {
@@ -351,8 +368,16 @@ int main()
 		uniformShininess = shaderList[0].GetShininessLocation();
 
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
+		if (personaje) {
+			glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+			glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
+		}
+		else {
+			glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(cameraHeli.calculateViewMatrix()));
+			glUniform3f(uniformEyePosition, cameraHeli.getCameraPosition().x, cameraHeli.getCameraPosition().y, cameraHeli.getCameraPosition().z);
+		}
+
+		
 		glm::mat4 model(1.0);
 		// luz ligada a la cámara de tipo flash
 		glm::vec3 lowerLight = camera.getCameraPosition();
@@ -364,9 +389,23 @@ int main()
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
+		////////////////////////////////////
+		/// Modelos de personaje y avión
+		////////////////////////////////////
+
+		//Inicia información de personaje
 		animaciones[0].animate(&animate);
 		model = glm::mat4(1.0);
-		model = glm::translate(model, glm::vec3(0.0f + animaciones[0].getValor(4), -1.4f, 0.5f));
+		model = glm::translate(model, camera.getCameraPosition());
+		model = glm::rotate(model, -camera.getYaw() * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(1.0f, -1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		Kitt_M.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(-1.0f + animaciones[0].getValor(0), -1.4f, 0.5f));
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
