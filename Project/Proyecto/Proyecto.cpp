@@ -99,6 +99,7 @@ Model PiernaLT;
 Model ColaT;
 Model CuelloL;
 Model Stegosaurus;
+Model Velociraptor;
 
 Model Blackhawk_M;
 Model Mi_Auto;
@@ -336,6 +337,8 @@ int main()
 	CuelloL.LoadModel("Models/cuelloLargoVC.obj");
 	Stegosaurus = Model();
 	Stegosaurus.LoadModel("Models/stegosaurusVC.obj");
+	Velociraptor = Model();
+	Velociraptor.LoadModel("Models/velociraptorVC.obj");
 
 	Blackhawk_M = Model();
 	Blackhawk_M.LoadModel("Models/helicoptero.obj");
@@ -897,12 +900,28 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		CuelloL.RenderModel();
 
-		////////////////////////////// MODELO DEl STEGOSAURUS ///////////////////////////////////
+		////////////////////////////// MODELO DE STEGOSAURUS ///////////////////////////////////
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(55.0f, 0.0f, -30.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Stegosaurus.RenderModel();
+
+		////////////////////////////// MODELO DE VELOCIRAPTOR ///////////////////////////////////
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(55.0f, 0.0f, 30.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Velociraptor.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(50.0f, 0.0f, 30.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Velociraptor.RenderModel();
+
+		model = glm::mat4(1.0);
+		model = glm::translate(model, glm::vec3(60.0f, 0.0f, 30.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Velociraptor.RenderModel();
 
 		glUseProgram(0);
 		mainWindow.swapBuffers();
