@@ -326,7 +326,7 @@ int main()
 	Tiranosaurio = Model();
 	Tiranosaurio.LoadModel("Models/tiranoVP.obj");
 	PiernaRT = Model();
-	PiernaRT.LoadModel("Models/piernaRTirano1.obj");
+	PiernaRT.LoadModel("Models/piernaRTirano2.obj");
 	PiernaLT = Model();
 	PiernaLT.LoadModel("Models/piernaLTirano1.obj");
 	ColaT = Model();
