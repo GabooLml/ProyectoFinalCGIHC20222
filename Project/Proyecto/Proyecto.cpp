@@ -1,7 +1,7 @@
 /* Proyecto Final Semestre 2022-2
 Autores:
 	- Cruz Schouten Max Bernardo
-	- Rojas Méndez Gabriel
+	- Rojas Mï¿½ndez Gabriel
 */
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -15,6 +15,7 @@ Autores:
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
+
 //Para animaciones y archivos
 #include <iostream>
 #include <string>
@@ -33,11 +34,15 @@ Autores:
 #include "Skybox.h"
 #include "Keyframe.h"
 #include "ControlCamaras.h"
-//PARA LA IMPLEMENTACIÓN DE SONIDO
+//PARA LA IMPLEMENTACIï¿½N DE SONIDO
 #include <irrKlang.h>
 using namespace irrklang;
 
-//Para ilumininación
+//PARA LA IMPLEMENTACIï¿½N DE SONIDO
+#include <irrKlang.h>
+using namespace irrklang;
+
+//Para ilumininaciï¿½n
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -45,7 +50,7 @@ using namespace irrklang;
 #include "Material.h"
 
 const float toRadians = 3.14159265f / 180.0f;
-//Variables para animación del tiranosaurio
+//Variables para animaciï¿½n del tiranosaurio
 float movPiernaRT;
 float movPiernaLT;
 float movOffsetT;
@@ -86,11 +91,9 @@ std::vector<Shader> shaderList;
 //Mis texturas
 Texture waterTexture;
 Texture grassTexture;
-
 Texture brickTexture;
 Texture dirtTexture;
 Texture plainTexture;
-
 
 //SONIDOS
 ISoundEngine* Fondo = createIrrKlangDevice();
@@ -128,7 +131,7 @@ Skybox madrugada, dia, atardecer, noche;
 Material Material_brillante;
 Material Material_opaco;
 
-//VARIABLES PARA EJECUCIÓN HOMOGENEA EN CUALQUIER EQUIPO
+//VARIABLES PARA EJECUCIï¿½N HOMOGENEA EN CUALQUIER EQUIPO
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
@@ -163,7 +166,7 @@ static const char* vShader = "shaders/shader_light.vert";
 // Fragment Shader
 static const char* fShader = "shaders/shader_light.frag";
 
-//cálculo del promedio de las normales para sombreado de Phong
+//cï¿½lculo del promedio de las normales para sombreado de Phong
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
@@ -372,7 +375,7 @@ int main()
 	Poste.LoadModel("Models/Poste.obj");
 
 
-	//Nuestras imágenes de atrás y delante (texturas) están invertidas con respecto a la creación del skybox
+	//Nuestras imï¿½genes de atrï¿½s y delante (texturas) estï¿½n invertidas con respecto a la creaciï¿½n del skybox
 	std::vector<std::string> madrugadaCaras, diaCaras, atardecerCaras, nocheCaras;
 	madrugadaCaras.push_back("Textures/Skybox/madrugada_right.tga");
 	madrugadaCaras.push_back("Textures/Skybox/madrugada_left.tga");
@@ -410,7 +413,7 @@ int main()
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
 
-	//luz direccional, sólo 1 y siempre debe de existir
+	//luz direccional, sï¿½lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.5f, 0.8f,
 		0.0f, 0.0f, -1.0f);
@@ -418,7 +421,7 @@ int main()
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
 
-	//Declaración de primer luz puntual
+	//Declaraciï¿½n de primer luz puntual
 	pointLights[0] = PointLight(1.0f, 0.0f, 0.0f,
 		1.0f, 2.0f,
 		2.0f, 1.5f, 20.0f,
@@ -469,7 +472,7 @@ int main()
 	GLuint uniformColor = 0, uniformTextureOffset = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 
-	//Variables para animación del tiranosaurio
+	//Variables para animaciï¿½n del tiranosaurio
 	movPiernaRT = 0.0f;
 	movPiernaLT = 0.0f;
 	movOffsetT = 0.05;
@@ -634,7 +637,7 @@ int main()
 		//	}
 		//}
 
-		////Animación para tiranosaurio
+		////Animaciï¿½n para tiranosaurio
 		//if (movPiernaRT < 30.0 and movTirano == false)
 		//{
 		//	movPiernaRT += movOffsetT * deltaTime;
@@ -672,7 +675,7 @@ int main()
 			}
 		}
 
-		//Animación de la cola del tiranosaurio
+		//Animaciï¿½n de la cola del tiranosaurio
 		if (rotColaT < 10.0f and movTiranoCola == false)
 		{
 			rotColaT += rotColaTOffset * deltaTime;
@@ -696,7 +699,7 @@ int main()
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//Lógica ciclo dia noche
+		//Lï¿½gica ciclo dia noche
 		if (now >= 0.0f && now < 15.0f) {
 			mainLight.setAintensity(0.4);
 			madrugada.DrawSkybox(camera.calculateViewMatrix(), projection);
@@ -726,7 +729,7 @@ int main()
 		uniformColor = shaderList[0].getColorLocation();
 		uniformTextureOffset = shaderList[0].getOffsetLocation();
 
-		//información en el shader de intensidad especular y brillo
+		//informaciï¿½n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -742,12 +745,12 @@ int main()
 		}
 
 
-		// luz ligada a la cámara de tipo flash
+		// luz ligada a la cï¿½mara de tipo flash
 		glm::vec3 lowerLight = camera.getCameraPosition(); //captura la posicion de la camara
 		lowerLight.y -= 0.3f; //Baja tres unidades de la posicion de la camara para que nos vea raro
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection()); //Modifica la posicion de la camara
 
-		//información al shader de fuentes de iluminación
+		//informaciï¿½n al shader de fuentes de iluminaciï¿½n
 		shaderList[0].SetDirectionalLight(&mainLight);
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
@@ -773,8 +776,8 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0,1.0,-1.0));
 		animate = true;
 
-		////////////////////////////////////// GENERACIÓN DE LOS ELEMENTOS DEL ESCENARIO ///////////////////
-		////////////////// SUELO, POSTES, ÁRBOLES, ISLAS Y HELIPUERTO ////////////////////////////
+		////////////////////////////////////// GENERACIï¿½N DE LOS ELEMENTOS DEL ESCENARIO ///////////////////
+		////////////////// SUELO, POSTES, ï¿½RBOLES, ISLAS Y HELIPUERTO ////////////////////////////
 		//Variables para el movimiento del agua;
 		toffsetu += 0.0001;
 		toffsetv += 0.0;
@@ -883,7 +886,7 @@ int main()
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Isla.RenderModel();
 
-		//Árboles de la plaza central
+		//ï¿½rboles de la plaza central
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
