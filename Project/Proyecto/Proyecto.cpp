@@ -15,6 +15,7 @@ Autores:
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
+
 //Para animaciones y archivos
 #include <iostream>
 #include <string>
@@ -33,6 +34,10 @@ Autores:
 #include "Skybox.h"
 #include "Keyframe.h"
 
+//PARA LA IMPLEMENTACIÓN DE SONIDO
+#include <irrKlang.h>
+using namespace irrklang;
+
 //Para ilumininación
 #include "CommonValues.h"
 #include "DirectionalLight.h"
@@ -49,6 +54,8 @@ float rotColaT;
 float rotColaTOffset;
 bool movTirano;
 bool movTiranoCola;
+float toffsetu;
+float toffsetv;
 
 float movCoche;
 float movOffset;
@@ -80,10 +87,12 @@ Camera camera;
 //Mis texturas
 Texture waterTexture;
 Texture grassTexture;
-
 Texture brickTexture;
 Texture dirtTexture;
 Texture plainTexture;
+
+//SONIDOS
+ISoundEngine* Fondo = createIrrKlangDevice();
 
 //Mis modelos
 Model Arbol;
@@ -419,7 +428,7 @@ int main()
 	//Vista
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
 		uniformSpecularIntensity = 0, uniformShininess = 0;
-	GLuint uniformColor = 0;
+	GLuint uniformColor = 0, uniformTextureOffset = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	
 	//Variables para animación del tiranosaurio
@@ -428,6 +437,8 @@ int main()
 	movOffsetT = 0.05;
 	rotColaT = 0.0f;
 	rotColaTOffset = 0.03;
+	toffsetu = 0.0f;
+	toffsetv = 0.0f;
 
 	//Variables para las animaciones
 	movCoche = 0.0f;
@@ -446,6 +457,9 @@ int main()
 	anguloOffset = 0.05;
 	angulo1 = 0.0f;
 	anguloOffset1 = 0.01;
+
+	//MUSICA DE FONDO
+	Fondo->play2D("Music/Fondo.mp3", true);
 	
 	////Loop mientras no se cierra la ventana
 	while (!mainWindow.getShouldClose())
@@ -640,6 +654,7 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
+		uniformTextureOffset = shaderList[0].getOffsetLocation();
 
 		//información en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
@@ -663,6 +678,7 @@ int main()
 		glm::mat4 roadaux(1.0);
 		glm::mat4 tiranoaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
 
 
 		////////////////////////////////// MODELO AVATAR BENDER ///////////////////////////////////
@@ -677,13 +693,28 @@ int main()
 
 		////////////////////////////////////// GENERACIÓN DE LOS ELEMENTOS DEL ESCENARIO ///////////////////
 		////////////////// SUELO, POSTES, ÁRBOLES, ISLAS Y HELIPUERTO ////////////////////////////
+		//Variables para el movimiento del agua;
+		toffsetu += 0.0001;
+		toffsetv += 0.0;
+		if (toffsetu > 1.0)
+		{
+			toffsetu = 0.0;
+		}
+		toffset = glm::vec2(toffsetu, toffsetv);
+
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(15.0f, 1.0f, 15.0f));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		waterTexture.UseTexture();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		meshList[2]->RenderMesh();
+		glDisable(GL_BLEND);
+		toffset = glm::vec2(0.0f, 0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 
 		//MODELOS DE CAMINOS
 		model = glm::mat4(1.0);
@@ -928,4 +959,13 @@ int main()
 	}
 
 	return 0;
+}
+
+void inputKeyframes(bool* keys)
+{
+	if (keys[GLFW_KEY_2])
+	{
+		
+	}
+
 }
