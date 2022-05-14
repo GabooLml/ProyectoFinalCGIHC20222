@@ -18,6 +18,7 @@ public:
 	void generaInterpolaciones(void);
 	void imprimirValores(void);
 	float getValor(int);
+	void resetAnimacion(void);
 	~Keyframe();
 
 private:
@@ -32,5 +33,4 @@ private:
 	std::vector<std::vector<float>> incrementales;
 	int i_current_step = 0;
 	bool first_frame = true;
-	bool end_animation = false;
 };

@@ -13,15 +13,7 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 {
 	width = windowWidth;
 	height = windowHeight;
-	lightCount = 0;
-	lightHelicopterOff = 0;
 	muevex = 2.0f;
-	carlap = 0.0f;
-	helicopterX = 0.0f;
-	helicopterY = 0.0f;
-	helicopterZ = 0.0f;
-	helicopterlap = 0.0f;
-
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -44,7 +36,7 @@ int Window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	//CREAR VENTANA
-	mainWindow = glfwCreateWindow(width, height, "PROYECTO FINAL", NULL, NULL);
+	mainWindow = glfwCreateWindow(width, height, "Primer ventana", NULL, NULL);
 
 	if (!mainWindow)
 	{
@@ -75,7 +67,7 @@ int Window::Initialise()
 
 	glEnable(GL_DEPTH_TEST); //HABILITAR BUFFER DE PROFUNDIDAD
 							 // Asignar valores de la ventana y coordenadas
-							 
+
 							 //Asignar Viewport
 	glViewport(0, 0, bufferWidth, bufferHeight);
 	//Callback para detectar que se está usando la ventana
@@ -101,12 +93,17 @@ GLfloat Window::getYChange()
 	return theChange;
 }
 
-
-
+SpotLight* aux = new SpotLight();
 
 void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode)
 {
 	Window* theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+	
+	SpotLight* spot1;
+	SpotLight* spot2;
+	
+
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 	{
@@ -114,97 +111,29 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	}
 	if (key == GLFW_KEY_Y)
 	{
-		theWindow-> muevex += 1.0;
+		theWindow->muevex += 1.0;
 	}
 	if (key == GLFW_KEY_U)
 	{
-		theWindow-> muevex -= 1.0;
+		theWindow->muevex -= 1.0;
+	}
+	if (key == GLFW_KEY_J && action == GLFW_PRESS) {
+		*theWindow->camaraPersonaje = !(*theWindow->camaraPersonaje);	
+	}
+	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
+		*theWindow->animacionHelicoptero = !(*theWindow->animacionHelicoptero);
 	}
 
-	//Control de luces point light
-	if (key == GLFW_KEY_1)
-	{
-		theWindow->lightCount = 1;
-	}
-
-	if (key == GLFW_KEY_2)
-	{
-		theWindow->lightCount = 2;
-	}
-
-	if (key == GLFW_KEY_3)
-	{
-		theWindow->lightCount = 3;
-	}
-
-	if (key == GLFW_KEY_4)
-	{
-		theWindow->lightCount = 0;
-	}
-
-	//Control de la luz helicoptero
-	if (key == GLFW_KEY_5)
-	{
-		theWindow->lightHelicopterOff = 0;
-	}
-
-	if (key == GLFW_KEY_6)
-	{
-		theWindow->lightHelicopterOff = 1;
-	}
-
-	//Control del helicoptero
-	if (key == GLFW_KEY_KP_8)
-	{
-		theWindow->helicopterX -= 1.0;
-	}
-
-	if (key == GLFW_KEY_KP_2)
-	{
-		theWindow->helicopterX += 1.0;
-	}
-
-	if (key == GLFW_KEY_KP_6)
-	{
-		theWindow->helicopterZ -= 1.0;
-	}
-
-	if (key == GLFW_KEY_KP_4)
-	{
-		theWindow->helicopterZ += 1.0;
-	}
-
-	if (key == GLFW_KEY_KP_7)
-	{
-		theWindow->helicopterlap += 2.0;
-	}
-
-	if (key == GLFW_KEY_KP_9)
-	{
-		theWindow->helicopterlap -= 2.0;
-	}
-
-	if (key == GLFW_KEY_KP_1)
-	{
-		theWindow->helicopterY -= 1.0;
-	}
-
-	if (key == GLFW_KEY_KP_3)
-	{
-		theWindow->helicopterY += 1.0;
-	}
 
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)
 		{
 			theWindow->keys[key] = true;
-			printf("se presiono la tecla %d'\n", key);
 		}
 		else if (action == GLFW_RELEASE)
 		{
 			theWindow->keys[key] = false;
-			printf("se solto la tecla %d'\n", key);
 		}
 	}
 }

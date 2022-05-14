@@ -21,8 +21,10 @@ void Keyframe::animate(bool* play)
 			{
 				printf("Frame index= %d\n", playIndex);
 				printf("termina anim\n");
+
+				//*play = false;
 				playIndex = 0;
-				*play = false;
+				resetAnimacion();
 			}
 			else //Next frame interpolations
 			{
@@ -34,7 +36,7 @@ void Keyframe::animate(bool* play)
 			//Draw animation
 			for (int i = 0; i < frames[playIndex].size(); i++) {
 				valores[i] += incrementales[playIndex][i];
-				printf("Valor de animacion [%d][%d]: %f\n", playIndex, i, valores[i]);
+				//printf("Valor de animacion [%d][%d]: %f\n",playIndex, i , valores[i]);
 			}
 			i_current_step++;
 		}
@@ -63,8 +65,6 @@ void Keyframe::generaInterpolaciones(void)
 		incrementales.push_back(aux);
 	}
 }
-
-
 void Keyframe::imprimirValores(void) {
 	printf("De los frames\n");
 	printf(" Par inicial: %f, %f\n", num_pasos, num_variables);
@@ -81,6 +81,11 @@ float Keyframe::getValor(int index) {
 	return valores[index];
 
 }
+void Keyframe::resetAnimacion(void) {
+	valores = frames[0];
+	i_current_step = 0;
+}
+
 Keyframe::~Keyframe()
 {
 }

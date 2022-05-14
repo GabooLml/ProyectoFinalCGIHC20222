@@ -16,7 +16,7 @@ public:
 		GLfloat constantLocation, GLfloat linearLocation, GLfloat exponentLocation);
 
 	~PointLight();
-
+	GLfloat getPosition() { return position.x; }
 protected:
 	glm::vec3 position;
 
